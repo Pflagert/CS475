@@ -1,0 +1,8 @@
+#!/usr/bin/gnuplot
+set term qt 2
+set autoscale
+set xrange[0:9]
+set title 'Speedup'
+set ylabel 'Time in seconds'
+plot "`echo $PLOT_FILE`" using 1:4:xtic(2) with linespoints title "Speedup", '' using 1:4:(0):(-$4) with vectors notitle, '' using 1:4:(sprintf("%.5f", $4)) with labels notitle left offset 1, 1
+pause -1

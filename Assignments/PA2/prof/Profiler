@@ -1,0 +1,327 @@
+#!/bin/bash
+# Author: Tanner Pflager
+
+# Globals
+THIS_FILE="${0##*/}"
+OUT_FILE="$(pwd)/results/results$(hostname).txt"
+PLOT_FILE="$(pwd)/results/results$(hostname).dat"
+OFF_SET=0
+# Configurations
+SEQ_EXE=" ../final-sieve/sieve1"
+OMP_EXE=" ../final-sieve/sieve4"
+PARAM="25000000"
+CLEAN_UP=""
+ITERATIONS=5
+MIN_THREADS=1
+MAX_THREADS=8
+GREP_1="elapsed time = [0-9]*\.[0-9]*"
+GREP_2="[0-9]*\.[0-9]*"
+
+showUsage ()
+{
+    echo "Usage:"
+    echo "To show this message:  ./$THIS_FILE -help"
+    echo "To run the efficiency tests and graph executables: ./$THIS_FILE"
+    echo "To check if your parallelized program produces the same result as the sequential: ./$THIS_FILE --verify (number of threads to test with)"
+    echo "To check if your parallelized program produces the same result as the sequential with config file: "
+    echo "./$THIS_FILE --config /path/to/config/file --verify (number of threads to test with)"
+    echo "To run the efficiency tests without graphing the results: ./$THIS_FILE --graph=no"
+    echo "To run the tests with configurations: ./$THIS_FILE --config /path/to/config/file"
+    echo "To creat a configuration file: ./$THIS_FILE --create-config"
+    exit
+}
+
+verify() # verify( num_of_threads )
+{
+    local num_of_threads=$1
+    local seq_result_file="seq.txt"
+    local omp_result_file="omp.txt"
+    
+    echo "Testing $SEQ_EXE" 
+    $SEQ_EXE $PARAM | grep -v "$GREP_1" > $seq_result_file
+    
+    echo "Testing $OMP_EXE with $num_of_threads thread(s)"
+    export OMP_NUM_THREADS=$num_of_threads
+    $OMP_EXE $PARAM | grep -v "$GREP_1" > $omp_result_file
+    
+    echo "Checking Results"
+    check=$(diff $seq_result_file $omp_result_file | grep ^[\>\<] | wc -l)
+    if [[ "$check" != "0" ]]
+    then
+        echo -e "\e[1m\e[41m\e[97mResults are not the same"
+    else
+        echo  -e "\e[1m\e[42m\e[97mResults are the same"
+    fi
+    
+    echo -ne "\e[0m"
+    echo -n "Would you like to delete the result files (y/n): "
+    read tmp
+    if [[ "$tmp" == "y" ]]
+    then
+        echo "Removing output files"
+        rm -f $seq_result_file $omp_result_file
+    fi
+}
+
+load_config() # load_config ( file_name )
+{
+    local file_name=$1
+    echo "Loading configurations from $file_name..."
+    source <(grep -E '\w+=' $file_name)
+}
+
+createConfig()
+{
+    echo -n "What would you like to name this configuration? "
+    read config_name
+    echo -n "Type the path to the sequential executable: "
+    read seq_exe
+    echo -n "Type the path to the parallelized executable: "
+    read omp_exe
+    echo -n "Type the paramatters should be passed to the executables: "
+    read param
+    echo "Are there any files that should be removed after the executables run?"
+    echo -n "If so type the pattern or file name to remove (-ie: *.pgm ) or press [ENTER] to skip: "
+    read clean_up
+    echo -n "How many iterations should the tests run on?: "
+    read iterations
+    echo -n "What is the min number of threads you would like to test with?: "
+    read min_threads
+    echo -n "What is the max number of threads you would like to test with?: "
+    read max_threads
+    echo -n "Do you need to set some grep patterns (y/n) if not 'y' default patterns are used: "
+    read tmp
+    if [[ "$tmp" == "y" ]]
+    then 
+        clear
+        echo "This script uses two calls to grep to find the timed output of the executables"
+        echo "The the first grep call is used to find a particular line such as 'time = some_number' "
+        echo "The second grep call is to retrieve just 'some_number' "
+        echo -n "Enter the first grep pattern: "
+        read grep_1
+        echo -n "Enter the seconf grep pattern: "
+        read grep_2
+    else
+        grep_1=$GREP_1
+        grep_2=$GREP_2
+    fi
+    echo "Creating $config_name..."
+    echo "SEQ_EXE='$seq_exe'" > $config_name
+    echo "OMP_EXE='$omp_exe'" >> $config_name
+    echo "PARAM='$param'" >> $config_name
+    echo "CLEAN_UP='$clean_up'" >> $config_name
+    echo "ITERATIONS=$iterations" >> $config_name
+    echo "MIN_THREADS=$min_threads" >> $config_name
+    echo "MAX_THREADS=$max_threads" >> $config_name
+    echo "GREP_1='$grep_1'" >> $config_name
+    echo "GREP_2='$grep_2'" >> $config_name
+    
+    echo -n "Would you like to run the tests with these configurations now? (y/n)"
+    read tmp
+    if [[ "$tmp" == "y" ]]
+    then
+        load_config $config_name
+        run
+    else
+        exit
+    fi
+}
+
+# Test Sequential code $ITERATIONS times 
+testSEQ()
+{
+    echo "Testing $SEQ_EXE $ITERATIONS times..."
+    echo "SEQ" >> $OUT_FILE
+    local counter=0
+    while [  $counter -lt $ITERATIONS ]; do
+             $SEQ_EXE $PARAM >> $OUT_FILE
+             let counter=counter+1
+    done
+    rm -f $CLEAN_UP
+}
+
+# Testing parallel code $ITERATIONS times each for thread counts ($MIN_THREADS - $MAX_THREADS)
+testOMP ()
+{
+    echo "Testing $OMP_EXE..."
+    echo "OMP" >> $OUT_FILE
+    local P=$MIN_THREADS;
+    local max=$MAX_THREADS
+    let max=max+1
+    local counter=0
+    while [  $P -lt $max ]; do
+        export OMP_NUM_THREADS=$P
+        echo "Testing $OMP_EXE with $P thread(s) $ITERATIONS times..."
+        echo "P=$P" >> $OUT_FILE
+        let counter=0
+        while [  $counter -lt $ITERATIONS ]; do
+                $OMP_EXE $PARAM >> $OUT_FILE
+                let counter=counter+1
+        done
+             let P=P+1
+    done
+    rm -f $CLEAN_UP
+}
+
+# Find the difference between MIN_THREADS and 1 if MIN_THREADS is NOT 1
+setOffset()
+{
+    if [[ $MIN_THREADS -gt 1 ]]
+    then
+        let OFF_SET=MIN_THREADS-1
+    else
+        OFF_SET=0
+    fi
+}
+
+# Finds average, median, speedup, and efficiency for each test and writes to PLOT_FILE
+# This needs improvement
+plot_data ()
+{
+    echo "Plotting values..."
+    setOffset
+    local results=($(grep -o "$GREP_1" $OUT_FILE | grep -o "$GREP_2"))
+    local seq=0
+    local avg=0
+    local med_index=`echo "$ITERATIONS / 2" | bc`
+    echo $med_index
+    local array_for_median[0]=0
+    local num_threads=0
+    local counter=0
+    for var in "${results[@]}"
+    do
+        if [[ $counter -lt $ITERATIONS ]]
+        then
+            avg=`echo "$avg + $var" | bc -l`
+            array_for_median[$counter]=$var
+            let counter=counter+1
+        # end if
+        else
+            avg=`echo "$avg / $ITERATIONS" | bc -l`
+            temp_array=($(echo "${array_for_median[@]}" | sort -n))
+            median=${temp_array[$med_index]}
+            if [[ "$seq" == "0" ]]
+            then
+                seq=$median
+                speedup=1
+                eff=100
+                write_to_plot_file $num_threads $avg $speedup $eff $median
+                num_threads=$MIN_THREADS
+            else
+                speedup=`echo "$seq/$avg" | bc -l`
+                eff=`echo "$speedup/$num_threads  * 100" | bc -l`
+                write_to_plot_file $num_threads $avg $speedup $eff $median
+                let num_threads=num_threads+1
+            fi
+            let counter=0
+            avg=`echo $var | bc -l`
+            array_for_median[$counter]=$var
+            let counter=counter+1
+        fi
+    done
+    avg=`echo "$avg / $ITERATIONS" | bc -l`
+    temp_array=($(echo "${array_for_median[@]}" | sort -n))
+    median=${temp_array[$med_index]}
+    speedup=`echo "$seq/$avg" | bc -l`
+    eff=`echo "$speedup/$num_threads  * 100" | bc -l`
+    write_to_plot_file $num_threads $avg $speedup $eff $median
+}
+
+#finds the correct lable for the test and writes to the plot file
+write_to_plot_file () # write_to_plot_file ( num_of_threads, average, speedup, efficiency, median )
+{
+    local num_of_threads=$1
+    local average=$2
+    local speedup=$3
+    local efficiency=$4
+    local median=$5
+    local lable=""
+    if [[ "$num_of_threads" == "0" ]]
+    then
+        lable="Sequential"
+    else
+        lable="\"$num_of_threads Thread(s)\""
+        let num_of_threads=num_of_threads-OFF_SET
+    fi
+    echo $num_of_threads $lable $average $speedup $efficiency $median >> $PLOT_FILE
+}
+
+# runs the gnuplot scripts
+graph ()
+{
+    echo "making graphs"
+    export PLOT_FILE=$PLOT_FILE
+    # I do not know why but the first ./plotAvg does not create a graph that is why there are 2
+    plot/plotAvg &
+    plot/plotAvg &
+    plot/plotMed &
+    plot/plotSpeedup &
+    plot/plotEfficiency
+}
+
+run ()
+{
+    rm -f $OUT_FILE $PLOT_FILE
+    testSEQ
+    testOMP
+    plot_data
+    graph
+}
+
+
+#main
+if [[ $# -eq 0 ]]
+then
+    run
+elif [[ $# -eq 1 ]]
+then
+    if [[ "$1" == "-help" ]]
+    then
+        showUsage
+    elif [[ "$1" == "--graph=no" ]]
+    then
+        testSEQ
+        testOMP
+    elif [[ "$1" == "--graph=yes" ]]
+    then
+        run
+    elif [[ "$1" == "--create-config" ]]
+    then
+        createConfig
+    else
+        echo "Incorrect usage: "
+        showUsage
+    fi
+elif [[ $# -eq 2 ]]
+then
+    if [[ "$1" == "--verify" ]]
+    then
+        verify $2
+    elif [[ "$1" == "--config" ]]
+    then
+        load_config $2
+        run
+    else
+        echo "Incorrect usage: "
+        showUsage
+    fi
+elif [[ $# -eq 4 ]]
+then
+    if [[ "$1" == "--config" ]]
+    then
+        load_config $2
+        if [[ "$3" == "--verify" ]]
+        then
+            verify $4
+        else
+            echo "Incorrect usage: "
+            showUsage
+        fi
+    else
+        echo "Incorrect usage: "
+        showUsage
+    fi
+else
+    echo "Incorrect usage: "
+    showUsage
+fi

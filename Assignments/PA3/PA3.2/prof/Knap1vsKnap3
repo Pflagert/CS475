@@ -1,0 +1,142 @@
+#!/bin/bash
+# Author: Tanner Pflager
+
+# Globals
+THIS_FILE="${0##*/}"
+EXE_NAME1="knap1"
+EXE_NAME2="knap3"
+EXE1=" ../knap1"
+EXE2=" ../knap3"
+OUT_FILE1="$(pwd)/results/knap3/data/$(hostname)-$EXE_NAME1.txt"
+OUT_FILE2="$(pwd)/results/knap3/data/$(hostname)-$EXE_NAME2.txt"
+PLOT_FILE="$(pwd)/results/knap3/data/$(hostname)-$EXE_NAME2"
+EXE1_FAILED=0
+EXE2_FAILED=0
+OFF_SET=0
+START_THREAD=1
+END_THREAD=9
+# Configurations
+PARAM="k100x100M.txt"
+DEPTH=2
+CLEAN_UP=""
+ITERATIONS=15
+GREP_1="Time taken : [0-9]*\.[0-9]*"
+GREP_2="[0-9]*\.[0-9]*"
+
+testSEQ_EXE()
+{
+    rm -f $OUT_FILE1 
+    local SkipEXE1=0
+    local SkipEXE2=0
+    echo "Testing $EXE1 with $PARAM $ITERATIONS times..."
+    local counter=0
+    while [  $counter -lt $ITERATIONS ]; do
+        $EXE1 $PARAM | grep -o "$GREP_1" >> $OUT_FILE1
+        echo "Test $counter done"
+        let counter=counter+1
+    done
+    rm -f $CLEAN_UP
+}
+
+testOMP_EXE()
+{
+    rm -f $OUT_FILE2
+    local thread=$START_THREAD
+    while [  $thread -lt $END_THREAD ]; do
+        export OMP_NUM_THREADS=$thread
+        echo "Testing '$EXE2 $PARAM' with $thread thread(s) at Depth[$DEPTH] and $ITERATIONS times"
+        local counter=0
+        while [  $counter -lt $ITERATIONS ]; do
+                $EXE2 $PARAM | grep -o "$GREP_1"  >> $OUT_FILE2
+                echo "Test $counter with $thread thread(s) done"
+            let counter=counter+1
+        done
+        let thread=thread+1
+    done
+    rm -f $CLEAN_UP
+}
+
+init_plot()
+{
+    rm -f $PLOT_FILE
+    echo -e "Test \t\t\tTestNumber \tSpeedup" >> $PLOT_FILE
+}
+
+plot_data1 ()
+{
+    echo "Saving results..."
+    local results=($(grep -o "$GREP_1" $OUT_FILE1 | grep -o "$GREP_2"))
+
+    local avg=0
+    local counter=1
+    for var in "${results[@]}"
+    do
+        avg=$(bc <<< "$avg + $var")
+        if [[ $counter -eq $ITERATIONS ]]
+        then
+                avg=`echo "$avg / $ITERATIONS" | bc -l`
+                plot_data2 $avg
+                break
+        fi
+        let counter=counter+1
+    done
+}
+
+plot_data2()
+{
+    local results=($(grep -o "$GREP_1" $OUT_FILE2 | grep -o "$GREP_2"))
+    local seq=$1
+    write_to_plot_file 0 $seq $seq
+    local test_num=1
+    local avg=0
+    local counter=1
+    for var in "${results[@]}"
+    do
+        avg=$(bc <<< "$avg + $var")
+        if [[ $counter -eq $ITERATIONS ]]
+        then
+                avg=`echo "$avg / $ITERATIONS" | bc -l`
+                write_to_plot_file $test_num $seq $avg
+                let avg=0
+                let counter=0
+                let test_num=test_num+1
+        fi
+        let counter=counter+1
+    done
+}
+#finds the correct lable for the test and writes to the plot file
+write_to_plot_file () # write_to_plot_file ( test_num, seq, average )
+{
+    local test_num=$1
+    local seq=$2
+    local average=$3
+    if [[ $test_num -eq 0 ]]
+    then
+        local lable="Sequential"
+    else
+        local lable="'$test_num-Thread(s)'"
+    fi
+    
+    speedup=`echo "$seq / $avg" | bc -l`
+    echo -e "$lable \t$test_num \t\t$speedup" >> $PLOT_FILE
+}
+
+run ()
+{
+    temp="$PLOT_FILE"
+    PLOT_FILE="$temp-DEPTH($DEPTH)"
+    init_plot
+    testSEQ_EXE
+    testOMP_EXE
+    plot_data1
+    graph
+}
+graph ()
+{
+    echo "making graphs"
+    export PLOT_FILE=$PLOT_FILE
+    # I do not know why but the first ./plotAvg does not create a graph that is why there are 2
+    plot/plotSpeedup
+}
+
+run

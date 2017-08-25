@@ -1,0 +1,120 @@
+CS 475: Parallel Programming CS 475: Parallel Programming 
+Computer Science Department
+Fall 2016 
+CS 475 Checkin 
+ CSU Logo
+Home
+Syllabus
+Progress
+Assignments
+Checkin
+Resources
+Canvas
+ SERVER TIME
+Due Date: Sunday, 09-11-2016 @ 23:59
+Late Date: Sunday, 09-11-2016 @ 23:59	PA1.1: PA1 Phase 1	
+OPEN
+Due Date: Tuesday, 09-13-2016 @ 23:59
+Late Date: Saturday, 09-17-2016 @ 23:59	PA1.2: PA1 Phase 2	
+OPEN
+Due Date: Tuesday, 09-13-2016 @ 23:59
+Late Date: Saturday, 09-17-2016 @ 23:59	PA1.R: PA1 Report	
+OPEN
+Due Date: Sunday, 09-25-2016 @ 23:59
+Late Date: Sunday, 09-25-2016 @ 23:59	PA2.1: PA2 Phase 1	
+OPEN
+Due Date: Wednesday, 09-28-2016 @ 11:59
+Late Date: Wednesday, 09-28-2016 @ 11:59	PA2.2: PA2 Phase 2	
+OPEN
+Due Date: Wednesday, 09-28-2016 @ 11:59
+Late Date: Wednesday, 09-28-2016 @ 11:59	PA2.R: PA2 Report	
+OPEN
+Due Date: Tuesday, 10-18-2016 @ 23:59
+Late Date: Tuesday, 10-18-2016 @ 23:59	PA3.1: PA3 Phase 1	
+OPEN
+Due Date: Thursday, 10-20-2016 @ 23:59
+Late Date: Thursday, 10-20-2016 @ 23:59	PA3.2: PA3 Phase 2	
+OPEN
+Due Date: Friday, 10-21-2016 @ 23:59
+Late Date: Friday, 10-21-2016 @ 23:59	PA3.R: PA3 Report	
+OPEN
+Due Date: Sunday, 10-30-2016 @ 23:59
+Late Date: Sunday, 10-30-2016 @ 23:59	PA4.1: PA4 Phase 1	
+CLOSE
+Posted Date: Wednesday, 10-19-2016 @ 05:00
+
+Due Date: Sunday, 10-30-2016 @ 23:59
+
+Late Deadline: Sunday, 10-30-2016 @ 23:59
+
+Current submission: Sunday, 10-30-2016 @ 04:14
+
+Submission Status: Present	
+REVIEW
+Choose File
+SUBMIT
+Preliminary Testing: 0 / 1	
+DETAILS
+Final Grade: Not Graded	
+DETAILS
+
+
+Preliminary Testing: 
+
+PA4.1 Grade: 0 / 1
+
+testVERT Score: 0 / 1
+---------------------------------------
+GRADING DETAILS
+
+grading based on file: PA4.1.tar
+
+--------------------------------------------------------
+TEST: testtar CMD LINE: sh ../input/testTar.sh
+
+The cmd line is: timeout 2s sh ../input/testTar.sh
+--------------------------------------------------------
+TEST: testClean CMD LINE: sh ../input/testMakeClean.sh | sed '/rm/d'
+
+The cmd line is: timeout 2s sh ../input/testMakeClean.sh | sed '/rm/d'
+--------------------------------------------------------
+TEST: testCompileV CMD LINE: sh ../input/testMake.sh | sed '/mpicc/d'
+
+The cmd line is: timeout 2s sh ../input/testMake.sh | sed '/mpicc/d'
+--------------------------------------------------------
+TEST: testVERT CMD LINE: sh ../input/testVERT.sh
+
+The cmd line is: timeout 2s sh ../input/testVERT.sh
+
+Your Output/Master Output:
+
+output=$(mpiexec -np 1 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 12 -T 1 -v 2>&1)                  output=$(mpiexec -np 1 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 12 -T 1 -v 2>&1)
+[[ $output  =~ "SUCCESS" ]] && echo "Test passed"                                                       [[ $output  =~ "SUCCESS" ]] && echo "Test passed"
+Test passed                                                                                             Test passed
+output=$(mpiexec -np 2 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 6 -T 1 -v 2>&1)                   output=$(mpiexec -np 2 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 6 -T 1 -v 2>&1)
+[[ $output  =~ "SUCCESS" ]] && echo "Test passed"                                                       [[ $output  =~ "SUCCESS" ]] && echo "Test passed"
+                                                                                                   >    Test passed
+output=$(mpiexec -np 3 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 4 -T 1 -v 2>&1)                   output=$(mpiexec -np 3 Jacobi2D-BlockParallel-MPI-VERT -p 12 -x 12 -y 4 -T 1 -v 2>&1)
+[[ $output  =~ "SUCCESS" ]] && echo "Test passed"                                                       [[ $output  =~ "SUCCESS" ]] && echo "Test passed"
+                                                                                                   >    Test passed
+
+
+
+testVERT Score: 0 / 1
+--------------------------------------------------------
+
+
+Due Date: Tuesday, 11-01-2016 @ 23:59
+Late Date: Tuesday, 11-01-2016 @ 23:59	PA4.2: PA4 Phase 2	
+OPEN
+Due Date: Tuesday, 11-01-2016 @ 23:59
+Late Date: Tuesday, 11-01-2016 @ 23:59	PA4.R: PA4 Report	
+OPEN
+Due Date: Sunday, 11-20-2016 @ 23:59
+Late Date: Sunday, 11-20-2016 @ 23:59	Project: Project Report	
+OPEN
+Session Time 59 Secs. 
+Originating IP 76.120.120.62 
+User: Pflager Apply to CSU | Contact CSU | Disclaimer | Equal Opportunity 
+Colorado State University, Fort Collins, CO 80523 USA
+© 2016 Colorado State University CS Department

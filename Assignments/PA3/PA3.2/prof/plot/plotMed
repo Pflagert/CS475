@@ -1,0 +1,9 @@
+#!/usr/bin/gnuplot
+set term qt title "Median Time"
+set autoscale
+set xrange[0:9]
+set title 'Median Time'
+set ylabel 'Time in seconds'
+plot "`echo $PLOT_FILE`" using 1:6:xtic(2) with linespoints notitle, '' using 1:6:(0):(-$6) with vectors notitle, '' using 1:6:(sprintf("%.5f", $6)) with labels notitle left offset 1, 1
+pause -1
+set output "`echo $PLOT_FILE`-median.png"

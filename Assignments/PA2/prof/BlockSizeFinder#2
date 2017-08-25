@@ -1,0 +1,66 @@
+#!/bin/bash
+# Author: Tanner Pflager
+
+# Globals
+THIS_FILE="${0##*/}"
+# Configurations
+EXE=" ../final-sieve/sieve3"
+PARAM="1000000000"
+THREADS=8
+ITERATIONS=10
+BLOCK_SIZE_START=50000
+BLOCK_SIZE_STOP=5000000
+BLOCK_SIZE_INC=50000
+OUT_FILE="$(pwd)/results/$(hostname)-$PARAM.txt"
+OPT_FILE="$(pwd)/results/$(hostname)-$PARAM-Opt.txt"
+GREP_1="elapsed time = [0-9]*\.[0-9]*"
+GREP_2="[0-9]*\.[0-9]*"
+
+testEXE()
+{
+    echo "Testing $EXE with $PARAM..."
+    export OMP_NUM_THREADS=$THREADS
+    local counter=0
+    local block=$BLOCK_SIZE_START
+    while [  $block -le $BLOCK_SIZE_STOP ]; do
+             echo -e "\tTesting with BlockSize = $block $ITERATIONS times..."
+             echo $block >> $OUT_FILE 
+             counter=0
+             while [ $counter -lt $ITERATIONS ]; do
+                $EXE $PARAM $block | grep -o "$GREP_1" >> $OUT_FILE
+                let counter=counter+1
+             done
+             block=$(bc <<< "$block + $BLOCK_SIZE_INC");
+    done
+}
+
+
+plot_data ()
+{
+    echo "Plotting values..."
+    local results=($(grep -o "$GREP_1" $OUT_FILE | grep -o "$GREP_2"))
+    local block=$BLOCK_SIZE_START
+    local avg=0
+    local counter=1
+    for var in "${results[@]}"
+    do
+        avg=$(bc <<< "$avg + $var")
+        if [[ $counter -eq $ITERATIONS ]]
+        then
+                avg=`echo "$avg / $ITERATIONS" | bc -l`
+                echo -e "Blocksize: $block\t= $avg" >> $OPT_FILE
+                block=$(bc <<< "$block + $BLOCK_SIZE_INC");
+                avg=0
+                counter=0
+        fi
+        let counter=counter+1
+    done
+}
+
+run ()
+{
+    testEXE
+    plot_data
+}
+
+run

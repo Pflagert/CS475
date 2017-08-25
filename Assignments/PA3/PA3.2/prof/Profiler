@@ -1,0 +1,7 @@
+#!/bin/bash
+# Author: Tanner Pflager
+
+./KnapSeqvsKnap1;
+./Knap1vsKnap2;
+./Knap1vsKnap3;
+./Knap1vsKnap4;

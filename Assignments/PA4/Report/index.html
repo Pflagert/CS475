@@ -1,0 +1,265 @@
+<!-- Start contents of main page here. -->
+  
+<!-- This page is based upon the CSU CS Roo PHP Course Website Template -->
+<!-- Version 3.1.1 January 22, 2016: updated for bootstrap version 3.3.6 -->
+
+<!DOCTYPE html>
+<head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+   <title>Assignment 4 - Jacobi2D MPI Blocking</title>
+   
+    <!-- Bootstrap -->
+    <link href="../../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+	<link href="../../styles.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body>
+    <!-- The following two scripts are required as part of supporet for bootstrap: JRB 1/8/2016 -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    
+    <div id="page">
+
+        <div id="banner">
+        	<div class="row">
+                <!-- Left side course logo acts as another link to course homepage -->
+                <div class="col-sm-4 hidden-xs" id="course_logo">
+                    <a href="../../index.php" title="Course Homepage"> <img
+                        src="../../res_images/CO.jpg" alt="CS 475: Parallel Programming"
+                        width="250" height="140" style="border: 0px;" />
+                    </a>
+                </div>
+                
+                <!-- Center of banner provides course title, course subtitle, department name and line, and finally term -->
+                <div class="col-sm-4 col-xs-12" id="banner_title">
+                    <span class="course_title">      CS 475: Parallel Programming </span><br />
+                    <span class="csdept">   <a href="http://www.cs.colostate.edu">Computer Science Department</a></span><br/>
+                    <span class="course_subtitle">   Fall 2016 </span><br />
+                    <span class="course_subtitle">   Assignment 4 - Jacobi2D MPI Blocking </span><br />
+                </div>
+                <!-- Right side CSU logo is a link to CSU main homepage -->
+               	<div class="col-sm-4 hidden-xs" >
+                    <div  id="csu_logo">
+                        <a href="http://welcome.colostate.edu/" title="CSU Welcome Page"> <img
+                            src="../../res_images/co_state_univ_fr_grn_glow.png" alt="CSU Logo" width="205"
+                            height="91" style="border: 0px;"  />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Collapsible Nav Bar -->
+             <nav class="navbar" role="navigation" id="navagation">
+             	<div class="pull-center">
+                    <!-- Toggles menu for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#global-navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="collapse navbar-collapse" id="global-navbar">
+                        <ul class="nav navbar-nav">
+                            <li ><a  class="navi" href="../../index.php" >Home</a></li>
+                            <li ><a  class="navi" href="../../home_syllabus.php" >Syllabus</a></li>
+                            <li ><a  class="navi" href="../../home_progress.php" >Progress</a></li>
+                            <li class="active"><a  class="navi" href="../../home_assignments.php" >Assignments</a></li>
+                            <li ><a  class="navi" href="../../home_checkin.php" >Checkin</a></li>
+                            <li ><a  class="navi" href="../../home_resources.php" >Resources</a></li>
+                            <li ><a  class="navi" href="http://info.canvas.colostate.edu/login.aspx">Canvas</a></li> 
+                        </ul>
+                     </div>
+                </div> 
+        	</nav>
+        </div>  <!-- End of the Banner at the top of the page -->
+
+<!-- Start contents of main page here. -->
+
+
+<div id="contents">
+   <div class="indented">
+<h3> Introduction</h3> The objective of this assignment is two fold.
+<ol>
+<li>Solidify the concepts needed to distribute data between PEs corresponding
+  to "ghost" or "halo" cells of a 2D stencil computation.  In general, this is
+  a tunable parameter, but for this assignment we want you to use the simplest
+  halo: width 1.
+<li>Develop an intuition for the communication overhead in an MPI program.
+</ol>
+
+<p>To achieve this you will perform a series of programming tasks followed by a
+series of experimental tasks.  The coding is quite tricky.  I suggest you
+follow the steps outlined below.  You will be implementing the communication
+required for a 1D data decomposition of Jacobi2D in MPI.  The vast majority of
+the code is supplied.  There are comments in the code in the locations<!-- (step-3
+of the main function) --> that you need to update.  
+
+<!-- If you are able to get the vertical communication working, but unable to
+get the horizontal communication working you copy your file to one named
+Jacobi2D-BlockParallel-MPI-VERT.test.c.  We will use this one for automated
+testingin the vertical direction if it exists.  <p> -->
+
+The data domain is square (-p problemSize).  Your block may or may not be
+square, but each PE only gets a single block.  This means that there is a
+mathematical relationship between the problem size, the PE count and the block
+sizes (-x xsize -y ysize).  You need to figure that out (and put it in your
+report).</p>
+
+<h3> Programming Tasks </h3>
+<ol>
+
+  <li> <b> Vertical communication:
+[Jacobi2D-BlockParallel-MPI-VERT.test.c]</b> <!--For this part, you are to assume
+that xsize=p (and ensure during testing that the command line arguments
+reflect this).  Sothe code only does vertical communication-->.  Insert the code
+needed to exchange ghost cells between neighbors to the north and south of
+each block.  Remember to be cognizant of the order of your sends and receives
+as well as making sure you don't attempt to send to a rank that does not exist
+(for instance -1).
+
+<li><b> Vertical & Horizontal communication: [Extra-credit]
+[Jacobi2D-BlockParallel-MPI.test.c]</b> The given code can handle
+both vertical and horizontal communication. Make appropriate changes to accept both horizontal and vertical tile sizes. 
+Insert the code needed to exchange ghost cells between neighbors to the east and the west of each block.  Keep in
+mind the same gotchas that you ran into for the north and south neighbors.
+<!--Also, it may be useful to first test this one with ysize=p, so that the only
+communication that occurs is horizontal.-->  <p>
+
+In addition to the above communication step, you will need to write the
+code needed to pack/unpack a column of a 2D array as implemented in the code
+into a single vector.  There are empty functions (packColToVec and
+unpackVecToCol) at the top of the file for you to use for this purpose.  You
+will need to call the pack function before MPI_Send, and the unpack function
+after MPI_Recv for the east-to-west communication.
+</ol>
+<h3> Experimental Tasks </h3>
+<ol>
+
+  <li> Vertical communication: You should come up with a hypothesis about
+  which tile size is going to perform best for this algorithm and test that
+  hypothesis. Your hypothesis should be the first section of your report. Run
+  your experiments for the following problem size on 1-64 processors of the <b>Cray</b> and report where your code stops scaling. Make sure not to use more than 2 nodes. You will need to note the data footprint and the cache size when allocating nodes and PEs. 
+<ol>
+<li> -p 10000, -T 50.  
+<li> -p 50000, -T 20. 
+</ol>
+<li> Horizontal communication <b>[Extra-credit]</b>: <!--But, in the updated tarfile we
+have made sure that ceiling of the division of length of one tile in the Horizontal direction and problem size should be equal to -p problem size in order to avoid idle procesors and also to make your communication code easier to write. You can modify the conditional statement in your code to accept different values of -y ysize.-->
+
+Use the same two problem instances as you used for vertical communication for your experimental evaluation.
+Here, you will have a choice to explore -x xsize and -y ysize for a given
+problem size and number of processors.
+</ol>
+
+<h3>Code Submission</h3> Submit your PA4.(1/2).tar containing vertical
+communication file (Jacobi2D-BlockParallel-MPI-VERT.test.c).  You may also
+include the extra-credit file Jacobi2D-BlockParallel-MPI.test.c.
+
+<h3>Report Submission</h3> Outline
+<ol>
+<li>Hypothesis
+<li>Algorithm Description
+<li>Blocking description: include details on ghost cell exchanges.
+<li>Experimental Setup 
+<li>Results
+<li>Conclusions and Analysis (was your hypothesis correct?).
+</ol>
+
+<h3>Some Notes on Getting Started</h3> Dowload <a href="PA4.tar">the Starter
+code</a>. You can download the <b>simpler
+version</b> <a href="PA4_simple.tar"> PA4_simple</a>.  <!--The only modification
+that we made is in the piece of code shown above.  Apart from that, the
+directory structure has been taken out and replaced with a simple Makefile.
+The Jacobi2D-BlockParallel-MPI.perfcompopts in the original file has been
+directly incorporated into the simplified Makefile.  It is simply including
+the compiler options that you want to explore.  Here we are using only -O3
+option.--> <br><br> The provided MPI code is complete for sequential execution.
+It also has a validation code.  When you open the tarball attempt to make the
+executable by typing the following:
+<pre>
+make Jacobi2D-BlockParallel-MPI
+</pre>
+Then attempt to run the code and make sure that it validates for serial
+execution (number of processor=1)
+<pre>
+On Cray (required to run only on Cray)
+$ aprun -n1 Jacobi2D-BlockParallel-MPI -p 8 -x 8 -y 8 -v
+Time: 0.000019
+SUCCESS
+
+On CS machines (can run on CS machines to debug code before transferring files to Cray)
+$ mpirun -np 1 Jacobi2D-BlockParallel-MPI -p 8 -x 8 -y 8 -v 
+Time:0.000034 
+SUCCESS
+</pre>
+Note the command line arguments. <br> 
+p is the problem size.<br>  
+x is the length of one tile in the Horizontal direction.<br> 
+y is the length of one tile in the Vertical direction.<br> 
+v indicates that validation should take place.<br>
+Do NOT change the command line argument parsing code (in util.h).<br>
+DO NOT run your parallel code with validation flag.<br>
+<!--Running experiments with validation on can take significant time (especially for
+larger problem size).  So, you can verify certain problem instances and turn
+it off when exploring tile size.  Plan your experiments accordingly.<br>->
+
+</div>
+<!-- End of contents -->
+ <!-- Entering the common footer, page termination -->
+
+<div id="footer">
+	<div class="row">
+		<div class="col-sm-3 col-xs-12" id="footerLeft">
+			<!-- Session time and originating IP address shown to user.   -->
+			<!-- Use the user information as a link to login/logout page. -->
+           Session Time 0 Secs. <br />
+           Originating IP 76.120.120.62 <br />
+           User: 
+           <a class="foot" href="../../ztools/authenticateLogin.php"> Guest </a>
+           
+        </div>
+		<div class="col-sm-6 col-xs-12" id="footerCenter">
+			<a class="foot" href="http://admissions.colostate.edu">Apply to CSU</a>
+			| <a class="foot"
+				href="http://www.colostate.edu/info-contact.aspx">Contact CSU</a>
+			| <a class="foot"
+				href="http://www.colostate.edu/info-disclaimer.aspx">Disclaimer</a>
+			| <a class="foot"
+				href="http://www.colostate.edu/info-equalop.aspx">Equal
+				Opportunity</a> <br /> Colorado State University, Fort Collins, CO
+			80523 USA<br /> &copy; 2016 Colorado State University
+		</div>
+		<!-- End of footer center division -->
+		<!-- End of footer left division -->
+		<div class="col-sm-3 col-xs-12">
+			<div id="footerRight">
+				<a href="http://www.cs.colostate.edu"> <img
+					src="../../res_images/csBuildingLowerRight.png" alt="CS Department" height="48"
+					width="185" style="border: 0px;" /></a>
+			</div>
+		</div>
+		<!-- End of footer right division -->
+	</div>
+</div>
+<!-- End of the footer division -->
+
+</div>
+<!-- Closes the page contents division opened by the ct310header -->
+</body>
+</html>
+

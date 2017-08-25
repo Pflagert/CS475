@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# Globals
+SEQ_EXE=" ./mandSEQ"
+OMP_EXE="./mandOMP"
+PARAM=1000
+ITERATIONS=5
+MAX_THREADS=8
+OUT_FILE="$(pwd)/results/results$(hostname).txt"
+PLOT_FILE="$(pwd)/results/results$(hostname).dat"
+
+# Test Sequential code 5 times 
+testSEQ()
+{
+    echo "Testing mandSEQ $ITERATIONS times..."
+    echo "SEQ" >> $OUT_FILE
+    local COUNTER=0
+    while [  $COUNTER -lt $ITERATIONS ]; do
+             ./mandSEQ 1000 | grep -o '[0-9]*\.[0-9]*' >> $OUT_FILE 
+             let COUNTER=COUNTER+1 
+    done
+    rm -f *.pgm
+}
+
+# Testing parallel code 5 times each for thread counts (1 - 8) 
+testOMP ()
+{    
+    echo "Testing mandOMP..."
+    echo "OMP" >> $OUT_FILE
+    local P=1;
+    max=$MAX_THREADS
+    let max=max+1
+    while [  $P -lt $max ]; do
+        export OMP_NUM_THREADS=$P
+        echo "Testing mandOMP with $P thread(s) $ITERATIONS times..."
+        echo "P=$P" >> $OUT_FILE
+        local COUNTER=0
+        while [  $COUNTER -lt $ITERATIONS ]; do
+                ./mandOMP 1000 | grep -o '[0-9]*\.[0-9]*' >> $OUT_FILE 
+                let COUNTER=COUNTER+1 
+        done
+             let P=P+1 
+    done
+     rm -f *.pgm
+}
+
+# Finds average, median, speedup, and efficiency for each test and writes to PLOT_FILE
+# This needs improvement
+plot_data ()
+{
+    echo "Plotting values..."
+    local results=($(grep  '[0-9]*\.[0-9]*' $OUT_FILE ))
+    local SEQ=0
+    local AVG=${results[0]}
+    array_for_median[0]=0
+    local num_threads=0
+    local COUNTER=1
+    for var in "${results[@]}"
+    do
+        if [[ $COUNTER -eq $ITERATIONS ]]
+        then
+            AVG=`echo $AVG / $ITERATIONS | bc -l`
+            temp_array=($(echo "${array_for_median[@]}" | sort -n))
+            median=${temp_array[2]}
+            if [[ "$SEQ" == "0" ]]
+            then
+                SEQ=$median
+                speedup=0
+                eff=1
+            else
+                speedup=`echo $SEQ/$AVG | bc -l`
+                eff=`echo $speedup/$num_threads | bc -l`
+            fi
+            write_to_plot_file $num_threads $AVG $speedup $eff $median        
+            let num_threads=num_threads+1
+            let COUNTER=1
+            AVG=`echo $var | bc -l`
+            array_for_median[0]=$var
+        # end if
+        else
+            AVG=`echo $AVG + $var | bc -l`
+           array_for_median[$COUNTER]=$var
+            let COUNTER=COUNTER+1
+        fi
+    done
+}
+
+#finds the correct lable for the test and writes to the plot file
+write_to_plot_file ()
+{
+    local lable=""
+    if [[ "$1" == "0" ]]
+    then
+        lable="Sequential"
+    else
+        lable="\"$1 Thread(s)\""
+    fi
+    echo $1 $lable $2 $3 $4 $5 >> $PLOT_FILE
+}
+
+# runs the gnuplot scripts
+graph ()
+{
+    echo "making graphs"
+    export PLOT_FILE=$PLOT_FILE
+    # I do not know why but the first ./plotAvg does not create a graph that is why there are 2
+    plot/plotAvg &
+    plot/plotAvg &
+    plot/plotMed &
+    plot/plotSpeedup &
+    plot/plotEfficiency &
+}
+
+#main
+rm -f $OUT_FILE $PLOT_FILE
+testSEQ
+testOMP
+plot_data
+graph

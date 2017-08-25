@@ -1,0 +1,8 @@
+#!/usr/bin/gnuplot
+set term qt 0
+set autoscale
+set xrange[0:9]
+set title 'Average Time'
+set ylabel 'Time in seconds'
+plot "`echo $PLOT_FILE`" using 1:3:xtic(2) with linespoints title "Average Time", '' using 1:3:(0):(-$3) with vectors notitle, '' using 1:3:(sprintf("%.5f", $3)) with labels notitle left offset 1, 1
+pause -1

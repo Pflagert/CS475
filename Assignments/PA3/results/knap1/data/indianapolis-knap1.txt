@@ -1,0 +1,75 @@
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.729552.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 6.220065.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 6.071445.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.961359.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.724035.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.722008.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.769311.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.723357.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.764222.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.724278.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.728345.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.725342.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.777330.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.739183.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.723715.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.723916.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 6.381994.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.722535.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.945643.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.722839.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.722271.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.730723.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.723172.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.749529.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 92686 
+Time taken : 5.721236.

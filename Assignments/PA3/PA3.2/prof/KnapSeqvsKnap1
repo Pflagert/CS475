@@ -1,0 +1,262 @@
+#!/bin/bash
+# Author: Tanner Pflager
+
+# Globals
+THIS_FILE="${0##*/}"
+EXE_NAME1="knap"
+EXE_NAME2="knap1"
+EXE1=" ../knapSeq"
+EXE2=" ../knap1"
+OUT_FILE1="$(pwd)/results/knap1/data/$(hostname)-$EXE_NAME1.txt"
+OUT_FILE2="$(pwd)/results/knap1/data/$(hostname)-$EXE_NAME2.txt"
+PLOT_FILE="$(pwd)/results/knap1/data/$(hostname).dat"
+EXE1_FAILED=0
+EXE2_FAILED=0
+OFF_SET=0
+N=10
+C=50
+# Configurations
+PARAM="25000000"
+CLEAN_UP=""
+ITERATIONS=25
+GREP_1="Time taken : [0-9]*\.[0-9]*"
+GREP_2="[0-9]*\.[0-9]*"
+testEXE()
+{
+    rm -f $OUT_FILE1 $OUT_FILE2 
+    `python2 knapsack_gen $1 $2 $1-$2-test.txt`
+    PARAM="$1-$2-test.txt"
+    local SkipEXE1=0
+    local SkipEXE2=0
+    echo "Testing $EXE1 and $EXE2 with $PARAM $ITERATIONS times..."
+    local counter=0
+    while [  $counter -lt $ITERATIONS ]; do
+        if [ $SkipEXE1 -eq 0 ]
+        then
+                $EXE1 $PARAM | grep -o "$GREP_1" >> $OUT_FILE1
+                if [[ $? -eq 1 ]]
+                then 
+                    echo "$EXE_NAME1 Failed on $PARAM"
+                    let EXE1_FAILED=EXE1_FAILED+1
+                    if [[ $EXE1_FAILED -eq $ITERATIONS ]]
+                    then
+                        tempcount=0
+                        while [ $tempcount -lt $ITERATIONS ]; do
+                            echo "Time taken : 1234.0" >> $OUT_FILE1
+                            let tempcount=tempcount+1
+                        done
+                        let SkipEXE1=1
+                    else
+                        continue;
+                    fi
+                fi
+            fi
+        if [ $SkipEXE2 -eq 0 ]
+        then
+             $EXE2 $PARAM grep -o "$GREP_1"  >> $OUT_FILE2
+             if [[ $? -eq 1 ]]
+             then 
+                    echo "$EXE_NAME2 Failed on $PARAM"
+                    let EXE2_FAILED=EXE2_FAILED+1
+                    if [[ $EXE2_FAILED -eq $ITERATIONS ]]
+                    then
+                        tempcount=0
+                        while [ $tempcount -lt $ITERATIONS ]; do
+                            echo "Time taken : 1234.0" >> $OUT_FILE2
+                            let tempcount=tempcount+1
+                        done
+                        let SkipEXE2=1
+                    else
+                        continue;
+                    fi
+             fi
+        fi
+        let counter=counter+1
+    done
+    rm -f $CLEAN_UP
+}
+init_plot()
+{
+    rm -f $PLOT_FILE
+    echo -e "Test \t\tTestNumber \tKnap \t\t\t\tKnap1 \t\t\t\tFailed-Attempts-Knap \tFailed-Attempts-Knap1" >> $PLOT_FILE
+}
+
+plot_data1 ()
+{
+    echo "Saving results..."
+    local results=($(grep -o "$GREP_1" $OUT_FILE1 | grep -o "$GREP_2"))
+
+    local avg=0
+    local counter=1
+    local iterations=$ITERATIONS
+    for var in "${results[@]}"
+    do
+        if [ "$var" == "1234.0" ]
+        then
+               let var=0
+               let iterations=iterations-1
+        fi
+        avg=$(bc <<< "$avg + $var")
+        if [[ $counter -eq $ITERATIONS ]]
+        then
+                if [[ $iterations -eq 0 ]]
+                then
+                    let iterations=1
+                fi
+                avg=`echo "$avg / $iterations" | bc -l`
+                plot_data2 $avg $1 $2 $3
+                break
+        fi
+        let counter=counter+1
+    done
+}
+
+plot_data2()
+{
+    local results=($(grep -o "$GREP_1" $OUT_FILE2 | grep -o "$GREP_2"))
+    local first_exe_avg=$1
+    local n=$2
+    local c=$3
+    local test_num=$4
+    local avg=0
+    local counter=1
+    local iterations=$ITERATIONS
+    for var in "${results[@]}"
+    do
+        if [ "$var" == "1234.0" ]
+        then
+               let var=0
+               let iterations=iterations-1
+        fi
+        avg=$(bc <<< "$avg + $var")
+        if [[ $counter -eq $ITERATIONS ]]
+        then
+                if [[ $iterations -eq 0 ]]
+                then
+                    let iterations=1
+                fi
+                avg=`echo "$avg / $iterations" | bc -l`
+                write_to_plot_file $test_num $n $c $first_exe_avg $avg
+                break
+        fi
+        let counter=counter+1
+    done
+}
+#finds the correct lable for the test and writes to the plot file
+write_to_plot_file () # write_to_plot_file ( test_num, N, C, exe1_average, exe2_average )
+{
+    local test_num=$1
+    local n=$2
+    local c=$3
+    local first_average=$4
+    local average=$5
+    local lable="'($n,$c)'"
+
+    echo -e "$lable \t$test_num \t\t$first_average \t\t$average \t\t$EXE1_FAILED \t\t\t$EXE2_FAILED" >> $PLOT_FILE
+}
+test=0
+runNC ()
+{
+    local count=0
+    local n=0
+    local c=0
+    for var in $*
+    do
+        if [ $count -eq 0 ]
+        then
+            let n=var
+        elif [ $count -eq 1 ]
+        then
+            let c=var
+        else
+            break
+        fi
+        let count=count+1
+    done
+    echo "$n $c"
+    EXE1_FAILED=0
+    EXE2_FAILED=0
+    testEXE $n $c
+    if [[ $(bc <<< "$n/1000000000") -ge 1 ]]
+    then
+        n=$(bc <<< "$n/1000000000")
+        temp2="G"
+        n="$n$temp2"    
+    elif [[ $(bc <<< "$n/1000000") -ge 1 ]]
+    then
+        n=$(bc <<< "$n/1000000")
+        temp2="M"
+        n="$n$temp2"
+    elif [[ $(bc <<< "$n/1000") -ge 1 ]]
+    then
+        n=$(bc <<< "$n/1000")
+        temp2="K"
+        n="$n$temp2"
+    fi
+    if [[ $(bc <<< "$c/1 000 000 000") -ge 1 ]]
+    then
+        c=$(bc <<< "$c/1000000000")
+        temp2="G"
+        c="$c$temp2"    
+    elif [[ $(bc <<< "$c/1000000") -ge 1 ]]
+    then
+        c=$(bc <<< "$c/1000000")
+        temp2="M"
+        c="$c$temp2"
+    elif [[ $(bc <<< "$c/1000") -ge 1 ]]
+    then
+        c=$(bc <<< "$c/1000")
+        temp2="K"
+        c="$c$temp2"
+    fi
+    plot_data1 "$n" "$c" $test
+    let test=test+1
+    
+}
+
+run ()
+{
+    testCasesFunctionOfN="2:100 20:100 200:100 2000:100 20000:100 200000:100"
+    testCasesFunctionOfC="100:2 100:20 100:200 100:2000 100:20000 100:200000"
+    testCasesConstantSize="200:20000000 2000:2000000 20000:200000 200000:20000 2000000:2000 20000000:200"
+    temp="$PLOT_FILE"
+    PLOT_FILE="$temp-N"
+    init_plot
+    for n_c_pair in $testCasesFunctionOfN
+    do
+        runNC `echo $n_c_pair | tr : " "`
+    done
+    rm -f *test.txt
+    graph
+    test=0
+    
+    PLOT_FILE="$temp-C"
+    init_plot
+    for n_c_pair in $testCasesFunctionOfC
+    do
+        runNC `echo $n_c_pair | tr : " "`
+    done
+    rm -f *test.txt
+    graph
+    test=0
+    
+    PLOT_FILE="$temp-constantSize"
+    init_plot
+    for n_c_pair in $testCasesConstantSize
+    do
+        runNC `echo $n_c_pair | tr : " "`
+    done
+    rm -f *test.txt
+    graph
+    test=0
+}
+graph ()
+{
+    echo "making graphs"
+    export PLOT_FILE=$PLOT_FILE
+    # I do not know why but the first ./plotAvg does not create a graph that is why there are 2
+    plot/plotAvgKnap1
+    plot/plotFailsKnap1
+}
+
+run

@@ -1,0 +1,9 @@
+#!/usr/bin/gnuplot
+set term qt title "Efficiency"
+set autoscale
+set xrange[0:9]
+set title 'Efficiency'
+set ylabel 'Time in seconds'
+plot "`echo $PLOT_FILE`" using 1:5:xtic(2) with linespoints notitle, '' using 1:5:(0):(-$5) with vectors notitle, '' using 1:5:(sprintf("%.2f %", $5)) with labels notitle left offset 1, 1
+pause -1
+set output "`echo $PLOT_FILE`-efficiency.png"

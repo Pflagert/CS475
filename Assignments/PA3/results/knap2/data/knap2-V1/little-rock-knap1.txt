@@ -1,0 +1,5 @@
+Time taken : 32.040600
+Time taken : 31.720171
+Time taken : 31.705090
+Time taken : 31.626344
+Time taken : 31.698808

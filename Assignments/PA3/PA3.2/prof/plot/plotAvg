@@ -1,0 +1,8 @@
+#!/usr/bin/gnuplot
+set terminal jpeg size 1920,1080
+set output "`echo $PLOT_FILE`-average.jpeg"
+set xrange[0:9]
+set title 'Average Time'
+set ylabel 'Time in seconds'
+plot "`echo $PLOT_FILE`" using 1:3:xtic(2) with linespoints notitle, '' using 1:3:(0):(-$3) with vectors notitle, '' using 1:3:(sprintf("%.8f", $3)) with labels notitle left offset 1, 1
+set autoscale

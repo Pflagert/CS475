@@ -1,0 +1,10 @@
+#!/usr/bin/gnuplot
+set terminal jpeg size 1920,1080
+set output "`echo $PLOT_FILE`-Avg.jpeg"
+
+set auto x
+set auto y
+
+plot "`echo $PLOT_FILE`"  using 3:xtic(1) title 'Knap' with lines, \
+     "" using 4:xtic(1) title 'Knap1' with lines, \
+        

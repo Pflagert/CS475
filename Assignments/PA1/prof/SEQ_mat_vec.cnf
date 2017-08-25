@@ -1,0 +1,9 @@
+SEQ_EXE=" ../SEQ2/mat_vec_SEQ"
+OMP_EXE="../Par/mat_vec"
+PARAM="2500000 100000"
+CLEAN_UP=""
+ITERATIONS=101
+MIN_THREADS=2
+MAX_THREADS=8
+GREP_1="elapsed time = [0-9]*\.[0-9]*"
+GREP_2="[0-9]*\.[0-9]*"

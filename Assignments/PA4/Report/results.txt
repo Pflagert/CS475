@@ -1,0 +1,130 @@
+Application 134450 resources: utime ~0s, stime ~0s, Rss ~4420, inblocks ~5084, outblocks ~12950
+Time: 14.517488
+Application 134451 resources: utime ~17s, stime ~1s, Rss ~1564760, inblocks ~5084, outblocks ~12950
+Time: 12.280338
+Application 134452 resources: utime ~27s, stime ~1s, Rss ~783236, inblocks ~5094, outblocks ~12950
+Application 134453 resources: utime ~0s, stime ~0s, Rss ~4420, inblocks ~5103, outblocks ~12950
+Time: 9.655753
+Application 134457 resources: utime ~32s, stime ~1s, Rss ~522876, inblocks ~5103, outblocks ~12950
+Time: 6.202795
+Application 134475 resources: utime ~34s, stime ~3s, Rss ~397452, inblocks ~10248, outblocks ~25900
+Time: 7.536446
+Application 134542 resources: utime ~41s, stime ~2s, Rss ~314376, inblocks ~5126, outblocks ~12950
+Time: 4.843058
+Application 134562 resources: utime ~38s, stime ~5s, Rss ~267232, inblocks ~10286, outblocks ~25900
+Time: 6.984708
+Application 134630 resources: utime ~52s, stime ~4s, Rss ~225144, inblocks ~5146, outblocks ~12950
+Time: 4.222628
+Application 134638 resources: utime ~41s, stime ~9s, Rss ~202088, inblocks ~10324, outblocks ~25900
+Time: 6.305466
+Application 134647 resources: utime ~60s, stime ~3s, Rss ~175732, inblocks ~5166, outblocks ~12951
+Time: 3.789339
+Application 134655 resources: utime ~39s, stime ~13s, Rss ~163028, inblocks ~10362, outblocks ~25900
+Time: 3.845785
+Application 134659 resources: utime ~44s, stime ~17s, Rss ~148832, inblocks ~10381, outblocks ~25900
+Time: 3.555814
+Application 134730 resources: utime ~40s, stime ~18s, Rss ~137096, inblocks ~10400, outblocks ~25900
+Time: 3.771241
+Application 134734 resources: utime ~45s, stime ~22s, Rss ~127052, inblocks ~10419, outblocks ~25900
+Time: 3.548428
+Application 134739 resources: utime ~45s, stime ~25s, Rss ~118492, inblocks ~10437, outblocks ~25900
+Time: 3.761619
+Application 134742 resources: utime ~54s, stime ~28s, Rss ~110940, inblocks ~10456, outblocks ~25900
+Time: 3.533691
+Application 134746 resources: utime ~49s, stime ~30s, Rss ~104344, inblocks ~10476, outblocks ~25900
+Time: 3.355766
+Application 134747 resources: utime ~49s, stime ~32s, Rss ~98792, inblocks ~10495, outblocks ~25901
+Time: 3.177936
+Application 134753 resources: utime ~48s, stime ~34s, Rss ~93576, inblocks ~10513, outblocks ~25901
+Time: 2.976327
+Application 134757 resources: utime ~47s, stime ~37s, Rss ~89072, inblocks ~10532, outblocks ~25901
+Time: 2.813113
+Application 134758 resources: utime ~46s, stime ~39s, Rss ~84804, inblocks ~10552, outblocks ~25902
+Time: 2.704992
+Application 134760 resources: utime ~48s, stime ~44s, Rss ~81364, inblocks ~10571, outblocks ~25902
+Time: 2.566721
+Application 134762 resources: utime ~49s, stime ~46s, Rss ~77912, inblocks ~10590, outblocks ~25903
+Time: 2.476342
+Application 134766 resources: utime ~48s, stime ~49s, Rss ~74760, inblocks ~10609, outblocks ~25903
+Time: 2.363747
+Application 134767 resources: utime ~45s, stime ~51s, Rss ~71904, inblocks ~10628, outblocks ~25903
+Time: 2.255612
+Application 134769 resources: utime ~46s, stime ~55s, Rss ~69216, inblocks ~10647, outblocks ~25903
+Time: 2.225192
+Application 134773 resources: utime ~45s, stime ~57s, Rss ~66916, inblocks ~10666, outblocks ~25903
+Time: 2.139844
+Application 134774 resources: utime ~48s, stime ~64s, Rss ~64732, inblocks ~10685, outblocks ~25903
+Time: 2.049237
+Application 134777 resources: utime ~42s, stime ~61s, Rss ~62860, inblocks ~10704, outblocks ~25903
+Time: 1.958018
+Application 134785 resources: utime ~44s, stime ~67s, Rss ~60772, inblocks ~10724, outblocks ~25903
+Time: 1.898158
+Application 134786 resources: utime ~41s, stime ~66s, Rss ~59052, inblocks ~10744, outblocks ~25903
+Time: 1.860843
+Application 134789 resources: utime ~45s, stime ~75s, Rss ~57348, inblocks ~10763, outblocks ~25903
+Time: 1.787382
+Application 134792 resources: utime ~41s, stime ~75s, Rss ~55780, inblocks ~10782, outblocks ~25903
+Time: 1.756391
+Application 134793 resources: utime ~40s, stime ~76s, Rss ~54288, inblocks ~10801, outblocks ~25903
+Time: 1.703508
+Application 134795 resources: utime ~39s, stime ~79s, Rss ~52980, inblocks ~10820, outblocks ~25903
+Time: 1.646628
+Application 134796 resources: utime ~42s, stime ~85s, Rss ~51580, inblocks ~10839, outblocks ~25903
+Time: 1.598966
+Application 134797 resources: utime ~37s, stime ~84s, Rss ~50304, inblocks ~10858, outblocks ~25903
+Time: 1.548074
+Application 134798 resources: utime ~42s, stime ~96s, Rss ~49204, inblocks ~10877, outblocks ~25903
+Time: 1.522698
+Application 134799 resources: utime ~40s, stime ~98s, Rss ~48128, inblocks ~10896, outblocks ~25903
+Time: 1.492631
+Application 134802 resources: utime ~43s, stime ~104s, Rss ~47060, inblocks ~10915, outblocks ~25903
+Time: 1.452993
+Application 134803 resources: utime ~37s, stime ~102s, Rss ~46004, inblocks ~10934, outblocks ~25903
+Time: 1.399085
+Application 134806 resources: utime ~41s, stime ~112s, Rss ~44976, inblocks ~10953, outblocks ~25903
+Time: 1.381677
+Application 134807 resources: utime ~39s, stime ~112s, Rss ~44260, inblocks ~10971, outblocks ~25903
+Time: 1.358137
+Application 134808 resources: utime ~41s, stime ~115s, Rss ~43372, inblocks ~10990, outblocks ~25904
+Time: 1.314609
+Application 134809 resources: utime ~37s, stime ~117s, Rss ~42828, inblocks ~11010, outblocks ~25904
+Time: 1.290794
+Application 134810 resources: utime ~39s, stime ~127s, Rss ~42832, inblocks ~11029, outblocks ~25904
+Time: 1.257368
+Application 134811 resources: utime ~38s, stime ~126s, Rss ~42840, inblocks ~11048, outblocks ~25905
+Time: 1.245606
+Application 134812 resources: utime ~38s, stime ~129s, Rss ~42844, inblocks ~11067, outblocks ~25905
+Time: 1.200731
+Application 134813 resources: utime ~35s, stime ~126s, Rss ~42852, inblocks ~11086, outblocks ~25905
+Time: 1.197957
+Application 134814 resources: utime ~37s, stime ~134s, Rss ~42856, inblocks ~11105, outblocks ~25905
+Time: 1.170028
+Application 134815 resources: utime ~36s, stime ~140s, Rss ~42864, inblocks ~11124, outblocks ~25905
+Time: 1.140479
+Application 134817 resources: utime ~38s, stime ~139s, Rss ~42872, inblocks ~11143, outblocks ~25905
+Time: 1.118345
+Application 134820 resources: utime ~36s, stime ~150s, Rss ~42888, inblocks ~11162, outblocks ~25905
+Time: 1.108636
+Application 134821 resources: utime ~38s, stime ~154s, Rss ~42900, inblocks ~11181, outblocks ~25905
+Time: 1.078321
+Application 134824 resources: utime ~36s, stime ~153s, Rss ~42912, inblocks ~11202, outblocks ~25905
+Time: 1.069870
+Application 134826 resources: utime ~40s, stime ~159s, Rss ~42928, inblocks ~11220, outblocks ~25905
+Time: 1.047863
+Application 134834 resources: utime ~34s, stime ~162s, Rss ~42936, inblocks ~11240, outblocks ~25905
+Time: 1.023566
+Application 134837 resources: utime ~39s, stime ~139s, Rss ~34692, inblocks ~11259, outblocks ~25905
+Time: 1.006457
+Application 134840 resources: utime ~38s, stime ~139s, Rss ~34260, inblocks ~11278, outblocks ~25905
+Time: 0.996333
+Application 134843 resources: utime ~38s, stime ~177s, Rss ~42968, inblocks ~11299, outblocks ~25905
+Time: 4.549568
+Application 134846 resources: utime ~170s, stime ~266s, Rss ~42980, inblocks ~11318, outblocks ~25905
+Time: 0.959006
+Application 134849 resources: utime ~35s, stime ~135s, Rss ~32852, inblocks ~11335, outblocks ~25905
+Time: 0.956886
+Application 134851 resources: utime ~35s, stime ~139s, Rss ~32412, inblocks ~11354, outblocks ~25905
+Time: 0.933306
+Application 134855 resources: utime ~38s, stime ~197s, Rss ~43012, inblocks ~16469, outblocks ~38855
+Time: 0.914476
+Application 134857 resources: utime ~30s, stime ~136s, Rss ~31696, inblocks ~11392, outblocks ~25905

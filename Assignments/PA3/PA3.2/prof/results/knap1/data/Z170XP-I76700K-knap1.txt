@@ -1,0 +1,75 @@
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.186821.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.176464.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.178475.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.131686.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.217323.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.319041.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.139627.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.172314.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.364911.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.178339.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.135620.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.182456.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.140143.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.194524.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.252481.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.138460.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.135024.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.210310.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.131911.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.146419.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.139620.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.133029.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.177052.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.174941.
+The number of objects is 20000000, and the capacity is 200.
+The optimal profit is 131121 
+Time taken : 3.196594.
